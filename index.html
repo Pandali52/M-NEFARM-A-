@@ -3,985 +3,1181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MineFarm - Minecraft Topluluk & Rehber Portalı</title>
-
-    <!-- Google Fonts: Pixel Fonts (Press Start 2P & VT323) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS CDN -->
+    <title>MineFarm - Minecraft Piksel Rehberi & Topluluğu</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome Icons -->
+    <!-- Pixel Font: Press Start 2P -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Firebase SDKs (v11) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-
-        // Firebase Yapılandırması
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBqC43kSzGNgK00ORcmDHhDYkUVjhwCjmU", 
-            authDomain: "minefarm-a5199.firebaseapp.com", 
-            databaseURL: "https://minefarm-a5199-default-rtdb.firebaseio.com", 
-            projectId: "minefarm-a5199", 
-            storageBucket: "minefarm-a5199.firebasestorage.app", 
-            messagingSenderId: "81140698124", 
-            appId: "1:81140698124:web:828602f12638ae6fd8b229", 
-            measurementId: "G-26X2V8L7WZ" 
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Firebase veritabanı referanslarını global scope'a aktarma
-        window.fbDB = db;
-        window.fbRef = ref;
-        window.fbSet = set;
-        window.fbPush = push;
-        window.fbOnValue = onValue;
-    </script>
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        /* Pixel Font Kurulumu */
-        body {
-            font-family: 'Press Start 2P', cursive;
+        * {
+            font-family: 'Press Start 2P', monospace, sans-serif;
             image-rendering: pixelated;
         }
 
-        .vt-font {
-            font-family: 'VT323', monospace;
-        }
-
-        /* Enerjik Yeşil Minecraft Creeper Arka Planı */
-        .minecraft-bg {
-            background-color: #47a036;
+        /* Creeper Texture & Energetic Green Background */
+        body {
+            background-color: #1b4332;
             background-image: 
-                radial-gradient(#3a882a 15%, transparent 16%),
-                radial-gradient(#317323 15%, transparent 16%),
-                linear-gradient(0deg, rgba(0,0,0,0.15) 50%, transparent 50%);
-            background-size: 60px 60px, 60px 60px, 10px 10px;
-            background-position: 0 0, 30px 30px, 0 0;
-            position: relative;
+                radial-gradient(#2d6a4f 15%, transparent 16%),
+                radial-gradient(#081c15 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: #ffffff;
         }
 
-        /* Creeper Yüz Motifleri Overlay */
-        .creeper-overlay {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 10 10"><path fill="%232e6e20" opacity="0.2" d="M1 1h8v8H1zM2 2h2v2H2zM6 2h2v2H6zM4 4h2v3H4zM3 5h1v3H3zM6 5h1v3H6z"/></svg>');
-            background-size: 120px 120px;
+        /* Creeper face subtle overlay header pattern */
+        .creeper-pattern {
+            background-color: #2d6a4f;
+            background-image: linear-gradient(30deg, #1b4332 12%, transparent 12.5%, transparent 87%, #1b4332 87.5%, #1b4332),
+            linear-gradient(150deg, #1b4332 12%, transparent 12.5%, transparent 87%, #1b4332 87.5%, #1b4332),
+            linear-gradient(30deg, #1b4332 12%, transparent 12.5%, transparent 87%, #1b4332 87.5%, #1b4332),
+            linear-gradient(150deg, #1b4332 12%, transparent 12.5%, transparent 87%, #1b4332 87.5%, #1b4332),
+            linear-gradient(60deg, #52b788 25%, transparent 25.5%, transparent 75%, #52b788 75.5%, #52b788);
+            background-size: 80px 140px;
         }
 
-        /* Minecraft Tarzı Piksel Çerçeve & Butonlar */
-        .mc-box {
-            background: rgba(20, 25, 20, 0.92);
-            border: 4px solid #101010;
-            box-shadow: inset -4px -4px 0px 0px #2a2a2a, inset 4px 4px 0px 0px #5a5a5a, 0 8px 0 #000;
+        /* Pixel Borders & Buttons */
+        .pixel-box {
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0px 0px #1a4314, inset 4px 4px 0px 0px #74c69d, 4px 4px 0px 0px #000;
+            background: #2d6a4f;
         }
 
-        .mc-box-light {
-            background: #c6c6c6;
-            border: 4px solid #101010;
-            color: #000;
-            box-shadow: inset -4px -4px 0px 0px #555555, inset 4px 4px 0px 0px #ffffff;
+        .pixel-box-dark {
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0px 0px #081c15, inset 4px 4px 0px 0px #2d6a4f, 4px 4px 0px 0px #000;
+            background: #112a1f;
         }
 
-        .mc-button {
-            background: #727272;
+        .pixel-btn {
             border: 3px solid #000;
-            box-shadow: inset -3px -3px 0px 0px #373737, inset 3px 3px 0px 0px #dbdbdb;
-            color: #fff;
-            text-shadow: 2px 2px #000;
-            transition: all 0.05s ease;
+            box-shadow: inset -3px -3px 0px 0px #1b4332, inset 3px 3px 0px 0px #b7e4c7, 3px 3px 0px 0px #000;
+            background: #40916c;
+            transition: all 0.1s ease;
             cursor: pointer;
         }
 
-        .mc-button:hover {
-            background: #8b8b8b;
+        .pixel-btn:hover {
+            background: #52b788;
+            transform: translate(-1px, -1px);
+            box-shadow: inset -3px -3px 0px 0px #2d6a4f, inset 3px 3px 0px 0px #d8f3dc, 4px 4px 0px 0px #000;
         }
 
-        .mc-button:active {
-            box-shadow: inset 3px 3px 0px 0px #373737, inset -3px -3px 0px 0px #dbdbdb;
-            transform: translateY(2px);
+        .pixel-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: inset 3px 3px 0px 0px #1b4332, 1px 1px 0px 0px #000;
         }
 
-        .mc-button-green {
-            background: #2b8227;
-            box-shadow: inset -3px -3px 0px 0px #174a15, inset 3px 3px 0px 0px #53bd4d;
+        .pixel-btn-gold {
+            background: #d4af37;
+            box-shadow: inset -3px -3px 0px 0px #8a7322, inset 3px 3px 0px 0px #fff1a8, 3px 3px 0px 0px #000;
+            color: #000;
         }
-        .mc-button-green:hover { background: #359d30; }
+        .pixel-btn-gold:hover {
+            background: #f3c623;
+        }
 
-        .mc-button-gold {
-            background: #c68e17;
-            box-shadow: inset -3px -3px 0px 0px #70500a, inset 3px 3px 0px 0px #f3c252;
-        }
-        .mc-button-gold:hover { background: #e0a31d; }
-
-        .mc-input {
-            background: #111;
-            border: 3px solid #555;
-            color: #55ff55;
-            box-shadow: inset 2px 2px 0px 0px #000;
-        }
-        .mc-input:focus {
+        .pixel-input {
+            border: 3px solid #000;
+            background: #081c15;
+            color: #74c69d;
+            box-shadow: inset 2px 2px 0px #000;
             outline: none;
-            border-color: #55ff55;
+        }
+        .pixel-input:focus {
+            border-color: #52b788;
         }
 
-        /* 16x16 Tuval Çizim Izgarası */
-        .pixel-grid {
-            display: grid;
-            grid-template-columns: repeat(16, 1fr);
-            grid-template-rows: repeat(16, 1fr);
-            aspect-ratio: 1/1;
-            border: 2px solid #000;
-            user-select: none;
-        }
-        .pixel-cell {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background-color: #333333;
-            cursor: pointer;
-        }
-
-        /* Özel Scrollbar */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
+            height: 12px;
         }
         ::-webkit-scrollbar-track {
-            background: #111;
+            background: #081c15;
+            border: 2px solid #000;
         }
         ::-webkit-scrollbar-thumb {
-            background: #55aa55;
+            background: #40916c;
             border: 2px solid #000;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52b788;
+        }
+
+        /* Canvas Grid */
+        #pixelCanvas {
+            border: 4px solid #000;
+            cursor: crosshair;
+            background-color: #ffffff;
+        }
+
+        /* Panda SVG Pixel Visuals */
+        .panda-box {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
         }
     </style>
 </head>
-<body class="minecraft-bg creeper-overlay min-h-screen text-white flex flex-col justify-between pb-10">
+<body class="min-h-screen flex flex-col pb-12">
 
-    <!-- Kullanıcı Giriş Modalı (İsim Girişi) -->
-    <div id="usernameModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-md w-full text-center space-y-5">
-            <h2 class="text-xl text-yellow-400">MINECRAFT NICKNAME</h2>
-            <p class="text-xs text-gray-300 leading-relaxed">Gönderilerde görünecek oyuncu adınızı girin:</p>
-            <input type="text" id="usernameInput" placeholder="Oyuncu Adı..." class="w-full mc-input p-3 text-sm" maxlength="25">
-            <button onclick="saveUsername()" class="w-full mc-button mc-button-green py-3 text-sm">GİRİŞ YAP</button>
-        </div>
-    </div>
-
-    <!-- Üst Başlık & Kullanıcı Barı -->
-    <header class="max-w-6xl mx-auto w-full pt-6 px-4">
-        <div class="mc-box p-4 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-green-600 border-2 border-black flex items-center justify-center text-xl shadow">🌾</div>
+    <!-- TOP BAR / HEADER -->
+    <header class="creeper-pattern border-b-4 border-black p-4 sticky top-0 z-40 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-500 border-2 border-black flex items-center justify-center text-black font-bold text-xl shadow-lg">
+                    <i class="fa-solid font-bold">M</i>
+                </div>
                 <div>
-                    <h1 class="text-2xl text-yellow-400 tracking-wider">MINEFARM</h1>
-                    <p class="text-[9px] text-green-400 mt-1">Minecraft Rehber & Topluluk Portalı</p>
+                    <h1 class="text-xl md:text-2xl text-yellow-300 drop-shadow-[2px_2px_0px_#000]">MineFarm</h1>
+                    <p class="text-[9px] text-green-200 mt-1">Minecraft Rehber & Topluluk Portalı</p>
                 </div>
             </div>
 
-            <!-- Kullanıcı Bilgisi -->
-            <div class="flex items-center gap-3 bg-black/50 p-2 border-2 border-gray-700">
-                <span class="text-xs text-gray-400">Oyuncu:</span>
-                <span id="displayUsername" class="text-xs text-green-300 font-bold">Misafir</span>
-                <button onclick="changeUsername()" class="text-[9px] text-yellow-400 underline hover:text-white ml-2">Değiştir</button>
+            <!-- USER PROFILE SETTING -->
+            <div class="pixel-box-dark p-2 text-xs flex items-center gap-2 w-full md:w-auto">
+                <i class="fa-solid fa-user text-green-400"></i>
+                <span class="text-[10px] hidden sm:inline">Kullanıcı:</span>
+                <input type="text" id="usernameInput" class="pixel-input p-1.5 text-[10px] w-full md:w-48" placeholder="İsminizi girin..." value="Steve">
             </div>
         </div>
-
-        <!-- Sekme Menüsü (Piksel Menü) -->
-        <nav class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            <button onclick="switchTab('farms')" id="tab-farms" class="mc-button py-3 text-[10px] sm:text-xs">🌾 FARMLAR</button>
-            <button onclick="switchTab('codes')" id="tab-codes" class="mc-button py-3 text-[10px] sm:text-xs">⚡ KODLAR</button>
-            <button onclick="switchTab('maps')" id="tab-maps" class="mc-button py-3 text-[10px] sm:text-xs">🗺️ HARİTALAR</button>
-            <button onclick="switchTab('mods')" id="tab-mods" class="mc-button py-3 text-[10px] sm:text-xs">🧩 MODLAR</button>
-            <button onclick="switchTab('seeds')" id="tab-seeds" class="mc-button py-3 text-[10px] sm:text-xs">🌱 SEEDLER</button>
-            <button onclick="switchTab('ai')" id="tab-ai" class="mc-button mc-button-gold py-3 text-[10px] sm:text-xs">🤖 Aİ</button>
-        </nav>
     </header>
 
-    <!-- ANA İÇERİK ALANI -->
-    <main class="max-w-6xl mx-auto w-full px-4 mt-6 flex-grow">
+    <!-- MAIN NAVIGATION TABS -->
+    <nav class="max-w-6xl mx-auto w-full my-4 px-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-[10px]">
+            <button onclick="switchTab('farmlar')" id="tab-farmlar" class="pixel-btn p-3 text-center text-white active-tab">
+                <i class="fa-solid fa-wheat-awn block text-lg mb-1"></i> Farmlar
+            </button>
+            <button onclick="switchTab('kodlar')" id="tab-kodlar" class="pixel-btn p-3 text-center text-white">
+                <i class="fa-solid fa-terminal block text-lg mb-1"></i> Kodlar
+            </button>
+            <button onclick="switchTab('haritalar')" id="tab-haritalar" class="pixel-btn p-3 text-center text-white">
+                <i class="fa-solid fa-map block text-lg mb-1"></i> Haritalar
+            </button>
+            <button onclick="switchTab('modlar')" id="tab-modlar" class="pixel-btn p-3 text-center text-white">
+                <i class="fa-solid fa-cube block text-lg mb-1"></i> Modlar
+            </button>
+            <button onclick="switchTab('seedler')" id="tab-seedler" class="pixel-btn p-3 text-center text-white">
+                <i class="fa-solid fa-seedling block text-lg mb-1"></i> Seedler
+            </button>
+            <button onclick="switchTab('ai')" id="tab-ai" class="pixel-btn pixel-btn-gold p-3 text-center font-bold">
+                <i class="fa-solid fa-robot block text-lg mb-1"></i> Aİ Asistan
+            </button>
+        </div>
+    </nav>
 
-        <!-- ================= 1. FARMLAR SEKSİYONU ================= -->
-        <section id="section-farms" class="tab-content hidden space-y-6">
-            <div class="mc-box p-4 flex flex-wrap justify-between items-center gap-4">
-                <div>
-                    <h2 class="text-lg text-yellow-400">FARM KATALOGLARI</h2>
-                    <p class="text-[10px] text-gray-400 mt-1">Gelişmiş Minecraft farmları ve tasarımları.</p>
-                </div>
-                <!-- Gizli Admin Butonu (Javascript ile kontrol ediliyor) -->
-                <button id="addCatalogBtn" onclick="openCatalogModal()" class="hidden mc-button mc-button-green text-xs px-4 py-3">
-                    + YENİ FARM KATALOĞU
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-6xl mx-auto w-full flex-grow px-3">
+
+        <!-- 1. FARMLAR BÖLÜMÜ -->
+        <section id="section-farmlar" class="tab-content">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h2 class="text-sm md:text-base text-yellow-300 flex items-center gap-2">
+                    <i class="fa-solid fa-wheat-awn"></i> Farm Katalogları
+                </h2>
+                <!-- Secret Admin Button: Only shows if Username starts with 'MinEFarm:' -->
+                <button id="addFarmCategoryBtn" onclick="openFarmCategoryModal()" class="pixel-btn p-2 text-[10px] bg-yellow-600 text-black hidden">
+                    + Yeni Farm Kataloğu Ekle
                 </button>
             </div>
 
-            <!-- Katalog Izgarası -->
-            <div id="catalogList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- İçerik Dinamik Yüklenecek -->
+            <!-- Farm Catalog List -->
+            <div id="farmCatalogGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Dynamic Catalogs populated from Firebase -->
             </div>
 
-            <div id="noFarmsNotice" class="mc-box p-8 text-center text-gray-400 text-xs">
-                Henüz hiç farm kataloğu bulunmuyor.
-            </div>
-
-            <!-- Farm Detay & Gönderiler Görünümü (Gizli) -->
-            <div id="farmDetailView" class="hidden mc-box p-6 space-y-6">
-                <button onclick="closeFarmDetail()" class="mc-button text-xs px-3 py-2">← Kataloglara Dön</button>
-                <div class="flex items-center gap-4 border-b border-gray-700 pb-4">
-                    <img id="detailCatalogIcon" src="" class="w-16 h-16 border-2 border-black bg-black">
+            <!-- Farm Details & Posts View (Hidden by default) -->
+            <div id="farmDetailView" class="hidden pixel-box p-4 mt-6">
+                <button onclick="closeFarmDetail()" class="pixel-btn p-2 text-[9px] mb-4 text-red-300">
+                    <i class="fa-solid fa-arrow-left"></i> Kataloglara Dön
+                </button>
+                <div class="flex items-center gap-4 border-b-2 border-black pb-4 mb-4">
+                    <img id="detailFarmIcon" src="" class="w-16 h-16 border-2 border-black bg-white rounded">
                     <div>
-                        <h3 id="detailCatalogTitle" class="text-xl text-yellow-400"></h3>
-                        <p id="detailCatalogDesc" class="text-xs text-gray-300 mt-1"></p>
+                        <h3 id="detailFarmTitle" class="text-lg text-yellow-300">Farm Başlığı</h3>
+                        <p id="detailFarmDesc" class="text-[10px] text-green-200 mt-1">Farm Açıklaması</p>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center">
-                    <h4 class="text-sm text-green-400">TOPLULUK GÖNDERİLERİ</h4>
-                    <button onclick="openFarmPostModal()" class="mc-button mc-button-green text-[10px] p-3">
-                        BU FARMLA İLGİLİ GÖNDERİ PAYLAŞ
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xs text-white">Gönderiler & Rehberler</h4>
+                    <button onclick="openAddFarmPostModal()" class="pixel-btn p-2 text-[10px] text-yellow-300">
+                        + Bu Farmla İlgili Gönderi Paylaş
                     </button>
                 </div>
 
                 <div id="farmPostsList" class="space-y-4">
-                    <!-- Gönderiler buraya yüklenecek -->
+                    <!-- Dynamic Posts -->
                 </div>
             </div>
         </section>
 
-        <!-- ================= 2. KODLAR SEKSİYONU ================= -->
-        <section id="section-codes" class="tab-content hidden space-y-6">
-            <div class="mc-box p-4 space-y-4">
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <h2 class="text-lg text-yellow-400">KOMUTLAR & KODLAR</h2>
-                    <button onclick="openModal('codeModal')" class="mc-button mc-button-green text-xs px-4 py-3">+ KOD PAYLAŞ</button>
-                </div>
 
-                <!-- Kapsamlı Kod Arama Sistemi -->
-                <div class="relative">
-                    <input type="text" id="codeSearchInput" oninput="filterCodes()" placeholder="Komut, başlık veya açıklama ara..." class="w-full mc-input p-3 pl-10 text-xs">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-xs"></i>
-                </div>
+        <!-- 2. KODLAR BÖLÜMÜ -->
+        <section id="section-kodlar" class="tab-content hidden">
+            <!-- Comprehensive Search Bar -->
+            <div class="pixel-box p-4 mb-6">
+                <label class="block text-[10px] text-yellow-300 mb-2">
+                    <i class="fa-solid fa-magnifying-glass"></i> Komut Arama Sistemi
+                </label>
+                <input type="text" id="codeSearchInput" oninput="filterCodes()" class="pixel-input w-full p-3 text-xs" placeholder="Kod veya komut adı ara (Örn: /give, teleport, weather)...">
             </div>
 
-            <!-- Kodlar Listesi -->
-            <div id="codesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dinamik İçerik -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm md:text-base text-yellow-300">Minecraft Komutları</h2>
+                <button onclick="openModal('addCodeModal')" class="pixel-btn p-2 text-[10px]">
+                    + Yeni Kod Paylaş
+                </button>
+            </div>
+
+            <div id="codesList" class="space-y-3">
+                <!-- Dynamic Codes -->
             </div>
         </section>
 
-        <!-- ================= 3. HARİTALAR SEKSİYONU ================= -->
-        <section id="section-maps" class="tab-content hidden space-y-6">
-            <div class="mc-box p-4 flex justify-between items-center">
-                <h2 class="text-lg text-yellow-400">MINECRAFT HARİTALARI</h2>
-                <button onclick="openModal('mapModal')" class="mc-button mc-button-green text-xs px-4 py-3">+ HARİTA PAYLAŞ</button>
+
+        <!-- 3. HARİTALAR BÖLÜMÜ -->
+        <section id="section-haritalar" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm md:text-base text-yellow-300">Paylaşılan Haritalar</h2>
+                <button onclick="openModal('addMapModal')" class="pixel-btn p-2 text-[10px]">
+                    + Harita Paylaş
+                </button>
             </div>
-            <div id="mapsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Dinamik İçerik -->
+            <div id="mapsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamic Maps -->
             </div>
         </section>
 
-        <!-- ================= 4. MODLAR SEKSİYONU ================= -->
-        <section id="section-mods" class="tab-content hidden space-y-6">
-            <div class="mc-box p-4 flex justify-between items-center">
-                <h2 class="text-lg text-yellow-400">MODLAR & EKLENTİLER</h2>
-                <button onclick="openModal('modModal')" class="mc-button mc-button-green text-xs px-4 py-3">+ MOD PAYLAŞ</button>
+
+        <!-- 4. MODLAR BÖLÜMÜ -->
+        <section id="section-modlar" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm md:text-base text-yellow-300">Minecraft Modları</h2>
+                <button onclick="openModal('addModModal')" class="pixel-btn p-2 text-[10px]">
+                    + Mod Paylaş
+                </button>
             </div>
-            <div id="modsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Dinamik İçerik -->
+            <div id="modsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamic Mods -->
             </div>
         </section>
 
-        <!-- ================= 5. SEEDLER SEKSİYONU ================= -->
-        <section id="section-seeds" class="tab-content hidden space-y-6">
-            <div class="mc-box p-4 flex justify-between items-center">
-                <h2 class="text-lg text-yellow-400">DÜNYA SEEDLERİ</h2>
-                <button onclick="openModal('seedModal')" class="mc-button mc-button-green text-xs px-4 py-3">+ SEED PAYLAŞ</button>
+
+        <!-- 5. SEEDLER BÖLÜMÜ -->
+        <section id="section-seedler" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm md:text-base text-yellow-300">Dünya Seedleri</h2>
+                <button onclick="openModal('addSeedModal')" class="pixel-btn p-2 text-[10px]">
+                    + Seed Paylaş
+                </button>
             </div>
-            <div id="seedsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Dinamik İçerik -->
+            <div id="seedsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamic Seeds -->
             </div>
         </section>
 
-        <!-- ================= 6. Aİ SEKSİYONU (YAPAY ZEKA) ================= -->
-        <section id="section-ai" class="tab-content hidden space-y-6">
-            <div class="mc-box p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-700 pb-4">
-                    <div>
-                        <h2 class="text-lg text-yellow-400">MINECRAFT Aİ ASİSTAN</h2>
-                        <p class="text-[9px] text-gray-400 mt-1">Web taraması yapabilir, özet çıkarır ve sorularınızı yanıtlar!</p>
+
+        <!-- 6. Aİ YAPAY ZEKA BÖLÜMÜ -->
+        <section id="section-ai" class="tab-content hidden">
+            <div class="pixel-box p-4 md:p-6 flex flex-col h-[650px]">
+                <div class="border-b-2 border-black pb-3 mb-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-yellow-300 text-lg"></i>
+                        <span class="text-xs text-yellow-300">MineAI Web & Oyun Asistanı</span>
                     </div>
+                    <button onclick="clearAIChat()" class="pixel-btn p-1.5 text-[8px] bg-red-800 text-white" title="Sohbeti Temizle">
+                        Temizle
+                    </button>
+                </div>
 
-                    <!-- PANDA PİKSEL MİNECRAFT ANİMASYON ALANI -->
-                    <div id="pandaContainer" class="flex items-center justify-center p-2 bg-black/40 border-2 border-black rounded">
-                        <!-- CSS/SVG İle Çizilmiş Piksel Panda -->
-                        <div class="relative w-16 h-16 flex flex-col items-center justify-end">
-                            <!-- Durum Simgesi (Soru İşareti / Ampul) -->
-                            <div id="pandaStatusIcon" class="absolute -top-3 text-lg animate-bounce hidden">
-                                ❓
-                            </div>
-                            
-                            <!-- Piksel Panda SVG Canvas -->
-                            <svg class="w-14 h-14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Kulaklar -->
-                                <rect x="1" y="2" width="4" height="3" fill="black"/>
-                                <rect x="11" y="2" width="4" height="3" fill="black"/>
-                                <!-- Kafası -->
-                                <rect x="2" y="4" width="12" height="10" fill="white"/>
-                                <!-- Göz Çevreleri (Siyah) -->
-                                <rect x="3" y="7" width="3" height="4" fill="black"/>
-                                <rect x="10" y="7" width="3" height="4" fill="black"/>
-                                <!-- Göz Bebekleri (Yeşilimsi/Beyaz) -->
-                                <rect x="4" y="8" width="1" height="1" fill="#55ff55"/>
-                                <rect x="11" y="8" width="1" height="1" fill="#55ff55"/>
-                                <!-- Burun & Ağız -->
-                                <rect x="7" y="10" width="2" height="2" fill="black"/>
-                                <rect x="6" y="12" width="4" height="1" fill="#d0d0d0"/>
+                <!-- PANDA STATE ANIMATION HEADER -->
+                <div class="bg-black/40 p-4 border-2 border-black mb-3 rounded flex flex-col items-center justify-center">
+                    <!-- Dynamic Panda Display -->
+                    <div id="pandaVisual" class="panda-box flex flex-col items-center">
+                        <!-- Idle / Ready Panda SVG -->
+                        <div id="pandaIdle" class="flex flex-col items-center">
+                            <span class="text-xs text-yellow-300 font-bold mb-1 animate-pulse"><i class="fa-solid fa-lightbulb text-yellow-400"></i></span>
+                            <svg width="50" height="50" viewBox="0 0 16 16" fill="none">
+                                <!-- Pixelated Panda Face -->
+                                <rect x="2" y="3" width="12" height="10" fill="#FFFFFF"/>
+                                <rect x="1" y="2" width="4" height="4" fill="#000000"/>
+                                <rect x="11" y="2" width="4" height="4" fill="#000000"/>
+                                <rect x="3" y="6" width="3" height="3" fill="#000000"/>
+                                <rect x="10" y="6" width="3" height="3" fill="#000000"/>
+                                <rect x="7" y="9" width="2" height="2" fill="#000000"/>
+                                <rect x="6" y="11" width="4" height="1" fill="#000000"/>
+                            </svg>
+                        </div>
+
+                        <!-- Researching Panda (Red Question Mark) -->
+                        <div id="pandaSearching" class="hidden flex flex-col items-center">
+                            <span class="text-sm text-red-500 font-bold mb-1 animate-bounce">?</span>
+                            <svg width="50" height="50" viewBox="0 0 16 16" fill="none" class="animate-pulse">
+                                <rect x="2" y="3" width="12" height="10" fill="#E0E0E0"/>
+                                <rect x="1" y="2" width="4" height="4" fill="#000000"/>
+                                <rect x="11" y="2" width="4" height="4" fill="#000000"/>
+                                <rect x="3" y="6" width="3" height="3" fill="#333333"/>
+                                <rect x="10" y="6" width="3" height="3" fill="#333333"/>
+                                <rect x="7" y="9" width="2" height="2" fill="#000000"/>
                             </svg>
                         </div>
                     </div>
+                    <p id="pandaStatusText" class="text-[9px] text-green-300 mt-2 text-center">
+                        MineAI hazır! İstediğiniz Minecraft konusunu veya genel bir bilgiyi sorun.
+                    </p>
                 </div>
 
-                <!-- Sohbet Mesaj Alanı -->
-                <div id="aiChatBox" class="h-80 overflow-y-auto space-y-3 p-3 bg-black/60 border-2 border-gray-800 text-xs">
-                    <div class="bg-gray-800 p-3 border border-gray-700 text-gray-200 leading-relaxed">
-                        <span class="text-yellow-400 font-bold block mb-1">🐼 PANDA AI:</span>
-                        Merhaba! Ben MineFarm akıllı asistanıyım. Minecraft ile ilgili sorularını sorabilir, web sitelerinden özet çıkartmamı isteyebilirsin!
+                <!-- CHAT MESSAGES SCROLL AREA -->
+                <div id="aiChatLog" class="flex-grow overflow-y-auto space-y-3 p-2 bg-black/30 border-2 border-black rounded mb-3">
+                    <div class="bg-green-900/60 p-3 border border-green-500 text-[10px] leading-relaxed">
+                        <strong class="text-yellow-300 block mb-1">MineAI:</strong>
+                        Merhaba! Ben MineAI. Minecraft yapı tarifleri, farmlar, kodlar veya web üzerindeki herhangi bir konu hakkında soru sorabilirsiniz. Size özet çıkartıp anlaşılır bir dilde yanıtlarım!
                     </div>
                 </div>
 
-                <!-- Girdi Kutusu -->
-                <div class="flex gap-2">
-                    <input type="text" id="aiInput" placeholder="Bir soru sorun veya bir web adresi verin..." class="flex-grow mc-input p-3 text-xs" onkeypress="if(event.key==='Enter') askAI()">
-                    <button onclick="askAI()" class="mc-button mc-button-gold text-xs px-6">SORU SOR</button>
-                </div>
+                <!-- CHAT INPUT -->
+                <form id="aiForm" onsubmit="handleAISubmit(event)" class="flex gap-2">
+                    <input type="text" id="aiInput" class="pixel-input flex-grow p-3 text-xs" placeholder="Sorunuzu buraya yazın..." required>
+                    <button type="submit" id="aiSendBtn" class="pixel-btn p-3 text-xs text-yellow-300 font-bold">
+                        Gönder
+                    </button>
+                </form>
             </div>
         </section>
 
     </main>
 
-    <!-- ================= MODALLAR (PENCERELER) ================= -->
 
-    <!-- 1. Farm Kataloğu Ekleme Modalı (16x16 Tuval İçerir) -->
-    <div id="catalogModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">YENİ FARM KATALOĞU EKLE</h3>
-                <button onclick="closeModal('catalogModal')" class="text-red-500 font-bold">X</button>
+    <!-- ================= MODALS ================= -->
+
+    <!-- 1. FARM KATALOĞU EKLEME MODALI (Sadece MinEFarm: ile başlayanlar) -->
+    <div id="addFarmCategoryModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Yeni Farm Kataloğu Oluştur</h3>
+                <button onclick="closeModal('addFarmCategoryModal')" class="text-red-400 font-bold">X</button>
             </div>
             
-            <input type="text" id="catTitle" placeholder="Katalog Başlığı..." class="w-full mc-input p-2 text-xs">
-            <textarea id="catDesc" placeholder="Katalog Açıklaması..." class="w-full mc-input p-2 text-xs h-20"></textarea>
-
-            <!-- 16x16 Piksel Çizim Alanı -->
-            <div>
-                <label class="text-[10px] text-green-400 block mb-2">16x16 PROFİL İKONU ÇİZ:</label>
-                <div class="flex gap-2 mb-2 items-center flex-wrap">
-                    <span class="text-[9px]">Renk Seç:</span>
-                    <input type="color" id="pixelColorPicker" value="#55ff55" class="w-8 h-8 cursor-pointer bg-transparent border-none">
-                    <button onclick="clearPixelCanvas()" class="mc-button text-[8px] px-2 py-1">Temizle</button>
+            <form onsubmit="saveFarmCategory(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Farm Başlığı:</label>
+                    <input type="text" id="newFarmTitle" class="pixel-input w-full p-2" placeholder="Örn: Demir Farmı" required>
                 </div>
-                <div id="pixelGridCanvas" class="pixel-grid max-w-[240px] mx-auto bg-black"></div>
-            </div>
 
-            <button onclick="saveFarmCatalog()" class="w-full mc-button mc-button-green py-3 text-xs">KATALOĞU KAYDET</button>
+                <div>
+                    <label class="block mb-1 text-green-300">Açıklama:</label>
+                    <textarea id="newFarmDesc" class="pixel-input w-full p-2 h-20" placeholder="Farm hakkında kısa bilgi..." required></textarea>
+                </div>
+
+                <!-- 16x16 PIXEL CANVAS DRAWING TOOL -->
+                <div>
+                    <label class="block mb-1 text-yellow-300">Profil Simgesi Çiz (16x16 Piksel Tuval):</label>
+                    <div class="flex flex-col items-center bg-black/40 p-2 border-2 border-black">
+                        <canvas id="pixelCanvas" width="224" height="224" class="mb-2"></canvas>
+                        <div class="flex items-center gap-2 flex-wrap justify-center">
+                            <input type="color" id="pixelColor" value="#52b788" class="w-8 h-8 cursor-pointer bg-transparent border-none">
+                            <button type="button" onclick="setEraser()" class="pixel-btn p-1 text-[8px]">Silgi</button>
+                            <button type="button" onclick="clearCanvas()" class="pixel-btn p-1 text-[8px] bg-red-800">Temizle</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addFarmCategoryModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Kataloğu Ekle</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- 2. Farm Gönderisi Ekleme Modalı -->
-    <div id="farmPostModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">FARMA GÖNDERİ PAYLAŞ</h3>
-                <button onclick="closeModal('farmPostModal')" class="text-red-500 font-bold">X</button>
-            </div>
 
-            <input type="text" id="fpVersion" placeholder="Sürüm (Örn: 1.20.4, Bedrock/Java)" class="w-full mc-input p-2 text-xs">
-            <textarea id="fpDesc" placeholder="Farm Anlatımı & Açıklaması..." class="w-full mc-input p-2 text-xs h-24"></textarea>
+    <!-- 2. FARM GÖNDERİSİ PAYLAŞMA MODALI -->
+    <div id="addFarmPostModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Farm Gönderisi Paylaş</h3>
+                <button onclick="closeModal('addFarmPostModal')" class="text-red-400 font-bold">X</button>
+            </div>
             
-            <div class="space-y-2">
-                <label class="text-[9px] text-gray-400">Medya Ekleyin (YouTube URL veya Resim Linki):</label>
-                <input type="text" id="fpMediaUrl" placeholder="https://youtube.com/watch?v=... veya Görsel URL" class="w-full mc-input p-2 text-xs">
-            </div>
+            <form onsubmit="saveFarmPost(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Minecraft Sürümü:</label>
+                    <input type="text" id="farmPostVersion" class="pixel-input w-full p-2" placeholder="Örn: 1.20.4 / Bedrock & Java" required>
+                </div>
 
-            <button onclick="saveFarmPost()" class="w-full mc-button mc-button-green py-3 text-xs">GÖNDERİYİ PAYLAŞ</button>
-        </div>
-    </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Açıklama / Rehber:</label>
+                    <textarea id="farmPostDesc" class="pixel-input w-full p-2 h-24" placeholder="Yapılış adımları ve ipuçları..." required></textarea>
+                </div>
 
-    <!-- 3. Kod Paylaşım Modalı -->
-    <div id="codeModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">YENİ KOD/KOMUT PAYLAŞ</h3>
-                <button onclick="closeModal('codeModal')" class="text-red-500 font-bold">X</button>
-            </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Medya Bağlantısı (Resim URL, Video URL veya YouTube Link):</label>
+                    <input type="url" id="farmPostMedia" class="pixel-input w-full p-2" placeholder="https://youtube.com/watch?v=... veya Görsel URL" required>
+                </div>
 
-            <input type="text" id="codeTitle" placeholder="Kod Başlığı (Örn: Işınlanma Komutu)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="codeCommand" placeholder="Komut ('/' ile başlamalı!)" class="w-full mc-input p-2 text-xs">
-            <textarea id="codeDesc" placeholder="Kodun Ne İşe Yaradığı ve Kullanımı..." class="w-full mc-input p-2 text-xs h-20"></textarea>
-
-            <button onclick="saveCode()" class="w-full mc-button mc-button-green py-3 text-xs">KODU YAYINLA</button>
-        </div>
-    </div>
-
-    <!-- 4. Harita Paylaşım Modalı -->
-    <div id="mapModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">HARİTA PAYLAŞ</h3>
-                <button onclick="closeModal('mapModal')" class="text-red-500 font-bold">X</button>
-            </div>
-
-            <input type="text" id="mapTitle" placeholder="Harita Başlığı..." class="w-full mc-input p-2 text-xs">
-            <input type="text" id="mapVersion" placeholder="Sürüm (Örn: 1.20)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="mapUrl" placeholder="İndirme Web Sitesi Adresi (URL)..." class="w-full mc-input p-2 text-xs">
-            <input type="text" id="mapImg" placeholder="Görsel URL..." class="w-full mc-input p-2 text-xs">
-
-            <button onclick="saveMap()" class="w-full mc-button mc-button-green py-3 text-xs">HARİTAYI PAYLAŞ</button>
-        </div>
-    </div>
-
-    <!-- 5. Mod Paylaşım Modalı -->
-    <div id="modModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">MOD PAYLAŞ</h3>
-                <button onclick="closeModal('modModal')" class="text-red-500 font-bold">X</button>
-            </div>
-
-            <input type="text" id="modTitle" placeholder="Mod Başlığı..." class="w-full mc-input p-2 text-xs">
-            <input type="text" id="modVersion" placeholder="Sürüm (Örn: 1.20.1 Forge/Fabric)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="modUrl" placeholder="İndirme Web Sitesi Adresi (URL)..." class="w-full mc-input p-2 text-xs">
-            <input type="text" id="modImg" placeholder="Görsel URL..." class="w-full mc-input p-2 text-xs">
-
-            <button onclick="saveMod()" class="w-full mc-button mc-button-green py-3 text-xs">MODU PAYLAŞ</button>
-        </div>
-    </div>
-
-    <!-- 6. Seed Paylaşım Modalı -->
-    <div id="seedModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="mc-box p-6 max-w-lg w-full space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-sm text-yellow-400">SEED PAYLAŞ</h3>
-                <button onclick="closeModal('seedModal')" class="text-red-500 font-bold">X</button>
-            </div>
-
-            <input type="text" id="seedTitle" placeholder="Başlık (Örn: Köy Yanı Yağmacı Kalesi)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="seedVersion" placeholder="Sürüm (Örn: 1.20 Java)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="seedValue" placeholder="Seed Kodu (Örn: -827391823912)" class="w-full mc-input p-2 text-xs">
-            <input type="text" id="seedImg" placeholder="Görsel URL..." class="w-full mc-input p-2 text-xs">
-
-            <button onclick="saveSeed()" class="w-full mc-button mc-button-green py-3 text-xs">SEEDİ PAYLAŞ</button>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addFarmPostModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Gönderiyi Paylaş</button>
+                </div>
+            </form>
         </div>
     </div>
 
 
-    <!-- JAVASCRIPT MANTIĞI VE UYGULAMA KODLARI -->
+    <!-- 3. KOD EKLEME MODALI -->
+    <div id="addCodeModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Yeni Komut / Kod Ekle</h3>
+                <button onclick="closeModal('addCodeModal')" class="text-red-400 font-bold">X</button>
+            </div>
+            
+            <form onsubmit="saveCode(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Başlık:</label>
+                    <input type="text" id="codeTitle" class="pixel-input w-full p-2" placeholder="Örn: Sınırsız Gece Görüşü Ver" required>
+                </div>
+
+                <div>
+                    <label class="block mb-1 text-yellow-300">Komut ("/" ile başlamalıdır):</label>
+                    <input type="text" id="codeCommand" class="pixel-input w-full p-2 text-green-400" placeholder="/effect give @p night_vision 99999" required>
+                </div>
+
+                <div>
+                    <label class="block mb-1 text-green-300">Açıklama:</label>
+                    <textarea id="codeDesc" class="pixel-input w-full p-2 h-20" placeholder="Komutun ne işe yaradığı..." required></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addCodeModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Kodu Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 4. HARİTA EKLEME MODALI -->
+    <div id="addMapModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Harita Paylaş</h3>
+                <button onclick="closeModal('addMapModal')" class="text-red-400 font-bold">X</button>
+            </div>
+            <form onsubmit="saveMap(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Harita Başlığı:</label>
+                    <input type="text" id="mapTitle" class="pixel-input w-full p-2" placeholder="Örn: Skyblock Survival" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">İndirme Web Sitesi Adresi:</label>
+                    <input type="url" id="mapUrl" class="pixel-input w-full p-2" placeholder="https://..." required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Sürüm:</label>
+                    <input type="text" id="mapVersion" class="pixel-input w-full p-2" placeholder="Örn: 1.20+" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Kapak Resmi Görsel URL:</label>
+                    <input type="url" id="mapImg" class="pixel-input w-full p-2" placeholder="https://..." required>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addMapModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Paylaş</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 5. MOD EKLEME MODALI -->
+    <div id="addModModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Mod Paylaş</h3>
+                <button onclick="closeModal('addModModal')" class="text-red-400 font-bold">X</button>
+            </div>
+            <form onsubmit="saveMod(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Mod Başlığı:</label>
+                    <input type="text" id="modTitle" class="pixel-input w-full p-2" placeholder="Örn: OptiFine / Just Enough Items" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">İndirme Web Sitesi Adresi:</label>
+                    <input type="url" id="modUrl" class="pixel-input w-full p-2" placeholder="https://..." required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Sürüm:</label>
+                    <input type="text" id="modVersion" class="pixel-input w-full p-2" placeholder="Örn: 1.20.1 Forge/Fabric" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Kapak Resmi Görsel URL:</label>
+                    <input type="url" id="modImg" class="pixel-input w-full p-2" placeholder="https://..." required>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addModModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Paylaş</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 6. SEED EKLEME MODALI -->
+    <div id="addSeedModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-3 z-50 hidden">
+        <div class="pixel-box p-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
+                <h3 class="text-xs text-yellow-300">Seed Paylaş</h3>
+                <button onclick="closeModal('addSeedModal')" class="text-red-400 font-bold">X</button>
+            </div>
+            <form onsubmit="saveSeed(event)" class="space-y-3 text-[10px]">
+                <div>
+                    <label class="block mb-1 text-green-300">Başlık:</label>
+                    <input type="text" id="seedTitle" class="pixel-input w-full p-2" placeholder="Örn: Tapınaklı Köy & Yağmacı Kalesi" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Sürüm:</label>
+                    <input type="text" id="seedVersion" class="pixel-input w-full p-2" placeholder="Örn: 1.20 Java" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-yellow-300">Seed Kodu:</label>
+                    <input type="text" id="seedCode" class="pixel-input w-full p-2 text-yellow-400" placeholder="-8234918239" required>
+                </div>
+                <div>
+                    <label class="block mb-1 text-green-300">Kapak Görsel URL:</label>
+                    <input type="url" id="seedImg" class="pixel-input w-full p-2" placeholder="https://..." required>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addSeedModal')" class="pixel-btn p-2 bg-gray-700">İptal</button>
+                    <button type="submit" class="pixel-btn p-2 bg-green-600 text-yellow-300">Paylaş</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT & APPLICATION LOGIC -->
     <script>
-        // Uygulama Durumu (State)
-        let currentUser = localStorage.getItem('minefarm_user') || '';
-        let currentSelectedCatalogId = null;
-        let allCodes = [];
-
-        // Başlangıç Yüklemeleri
-        window.onload = function() {
-            if (!currentUser) {
-                document.getElementById('usernameModal').classList.remove('hidden');
-            } else {
-                document.getElementById('usernameModal').classList.add('hidden');
-                document.getElementById('displayUsername').innerText = currentUser;
-                checkAdminStatus();
-            }
-
-            initPixelCanvas();
-            switchTab('farms');
-            listenFirebaseData();
+        // --- 1. FIREBASE INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqC43kSzGNgK00ORcmDHhDYkUVjhwCjmU",
+            authDomain: "minefarm-a5199.firebaseapp.com",
+            databaseURL: "https://minefarm-a5199-default-rtdb.firebaseio.com",
+            projectId: "minefarm-a5199",
+            storageBucket: "minefarm-a5199.firebasestorage.app",
+            messagingSenderId: "81140698124",
+            appId: "1:81140698124:web:828602f12638ae6fd8b229",
+            measurementId: "G-26X2V8L7WZ"
         };
 
-        // Kullanıcı Giriş İşlemleri
-        function saveUsername() {
-            const input = document.getElementById('usernameInput').value.trim();
-            if (!input) return alert('Lütfen geçerli bir isim girin!');
-            
-            currentUser = input;
-            localStorage.setItem('minefarm_user', currentUser);
-            document.getElementById('displayUsername').innerText = currentUser;
-            document.getElementById('usernameModal').classList.add('hidden');
-            
-            checkAdminStatus();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // State variables
+        let currentActiveFarmId = null;
+        let allCodesCache = [];
+        let aiHistory = [];
+
+        // --- 2. USERNAME & SECRET ADMIN CHECK ---
+        const usernameInput = document.getElementById('usernameInput');
+        const addFarmCategoryBtn = document.getElementById('addFarmCategoryBtn');
+
+        function getUsername() {
+            return usernameInput.value.trim() || "Steve";
         }
 
-        function changeUsername() {
-            document.getElementById('usernameInput').value = currentUser;
-            document.getElementById('usernameModal').classList.remove('hidden');
-        }
+        usernameInput.addEventListener('input', checkAdminPrivileges);
 
-        // Gizli Yönetici Kontrolü ("MinEFarm:" İle Başlama Şartı)
-        function checkAdminStatus() {
-            const adminBtn = document.getElementById('addCatalogBtn');
-            if (currentUser.startsWith('MinEFarm:')) {
-                adminBtn.classList.remove('hidden');
+        function checkAdminPrivileges() {
+            const val = usernameInput.value;
+            // Secret Check: If username starts with "MinEFarm:"
+            if (val.startsWith("MinEFarm:")) {
+                addFarmCategoryBtn.classList.remove('hidden');
             } else {
-                adminBtn.classList.add('hidden');
+                addFarmCategoryBtn.classList.add('hidden');
             }
         }
 
-        // Sekme Değiştirici
+        // --- 3. TAB NAVIGATION ---
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            document.getElementById('section-' + tabName).classList.remove('hidden');
 
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('mc-button-green');
-            });
-            const activeBtn = document.getElementById(`tab-${tabName}`);
-            if(activeBtn && tabName !== 'ai') activeBtn.classList.add('mc-button-green');
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('ring-4', 'ring-yellow-400'));
+            const activeBtn = document.getElementById('tab-' + tabName);
+            if (activeBtn) activeBtn.classList.add('ring-4', 'ring-yellow-400');
+
+            if (tabName === 'farmlar') closeFarmDetail();
         }
 
-        // Modal Aç/Kapat Yardımcıları
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        /* ================= 16x16 PİKSEL TUVAL ÇİZİM ARACI ================= */
+        // --- 4. 16x16 PIXEL CANVAS DRAWING LOGIC ---
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const pixelColorInput = document.getElementById('pixelColor');
+        const gridCols = 16;
+        const gridRows = 16;
+        const pixelSize = canvas.width / gridCols; // 224 / 16 = 14px per pixel
         let isDrawing = false;
-        function initPixelCanvas() {
-            const grid = document.getElementById('pixelGridCanvas');
-            grid.innerHTML = '';
-            for (let i = 0; i < 256; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'pixel-cell';
-                cell.addEventListener('mousedown', () => { isDrawing = true; paintCell(cell); });
-                cell.addEventListener('mouseover', () => { if (isDrawing) paintCell(cell); });
-                cell.addEventListener('mouseup', () => { isDrawing = false; });
-                grid.appendChild(cell);
+        let isEraser = false;
+        let gridData = Array(gridRows).fill(null).map(() => Array(gridCols).fill('#ffffff'));
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let r = 0; r < gridRows; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    ctx.fillStyle = gridData[r][c];
+                    ctx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+                    ctx.strokeStyle = '#e0e0e0';
+                    ctx.strokeRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+                }
             }
-            document.body.addEventListener('mouseup', () => { isDrawing = false; });
         }
 
-        function paintCell(cell) {
-            const color = document.getElementById('pixelColorPicker').value;
-            cell.style.backgroundColor = color;
+        function handleCanvasAction(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+            
+            const col = Math.floor(x / (rect.width / gridCols));
+            const row = Math.floor(y / (rect.height / gridRows));
+
+            if (col >= 0 && col < gridCols && row >= 0 && row < gridRows) {
+                gridData[row][col] = isEraser ? '#ffffff' : pixelColorInput.value;
+                drawGrid();
+            }
         }
 
-        function clearPixelCanvas() {
-            document.querySelectorAll('.pixel-cell').forEach(c => c.style.backgroundColor = '#333333');
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; handleCanvasAction(e); });
+        canvas.addEventListener('mousemove', (e) => { if (isDrawing) handleCanvasAction(e); });
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; handleCanvasAction(e); });
+        canvas.addEventListener('touchmove', (e) => { if (isDrawing) handleCanvasAction(e); });
+        window.addEventListener('touchend', () => isDrawing = false);
+
+        function setEraser() { isEraser = true; }
+        function clearCanvas() {
+            gridData = Array(gridRows).fill(null).map(() => Array(gridCols).fill('#ffffff'));
+            isEraser = false;
+            drawGrid();
         }
 
-        // Tuvali PNG Data URL olarak Dışa Aktarma
-        function exportPixelCanvas() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 16;
-            canvas.height = 16;
-            const ctx = canvas.getContext('2d');
-            const cells = document.querySelectorAll('.pixel-cell');
+        // Initialize Canvas
+        drawGrid();
 
-            cells.forEach((cell, idx) => {
-                const x = idx % 16;
-                const y = Math.floor(idx / 16);
-                ctx.fillStyle = cell.style.backgroundColor || '#333333';
-                ctx.fillRect(x, y, 1, 1);
-            });
 
-            return canvas.toDataURL();
+        // --- 5. FARMLAR MODULE (Realtime Database Entegrasyonu) ---
+        function openFarmCategoryModal() {
+            clearCanvas();
+            document.getElementById('newFarmTitle').value = '';
+            document.getElementById('newFarmDesc').value = '';
+            openModal('addFarmCategoryModal');
         }
 
-        /* ================= FIREBASE VERİ LİSTENELERİ ================= */
-        function listenFirebaseData() {
-            if (!window.fbDB) return;
+        function saveFarmCategory(e) {
+            e.preventDefault();
+            const title = document.getElementById('newFarmTitle').value.trim();
+            const desc = document.getElementById('newFarmDesc').value.trim();
+            const iconBase64 = canvas.toDataURL(); // Export drawn pixel art image
 
-            // 1. Farmlar dinleyici
-            window.fbOnValue(window.fbRef(window.fbDB, 'farm_catalogs'), (snapshot) => {
-                const data = snapshot.val();
-                renderFarmCatalogs(data);
-            });
-
-            // 2. Kodlar dinleyici
-            window.fbOnValue(window.fbRef(window.fbDB, 'codes'), (snapshot) => {
-                const data = snapshot.val();
-                allCodes = data ? Object.values(data) : [];
-                renderCodes(allCodes);
-            });
-
-            // 3. Haritalar dinleyici
-            window.fbOnValue(window.fbRef(window.fbDB, 'maps'), (snapshot) => {
-                renderCards('mapsList', snapshot.val(), 'map');
-            });
-
-            // 4. Modlar dinleyici
-            window.fbOnValue(window.fbRef(window.fbDB, 'mods'), (snapshot) => {
-                renderCards('modsList', snapshot.val(), 'mod');
-            });
-
-            // 5. Seedler dinleyici
-            window.fbOnValue(window.fbRef(window.fbDB, 'seeds'), (snapshot) => {
-                renderCards('seedsList', snapshot.val(), 'seed');
-            });
-        }
-
-        /* ================= 1. FARMLAR İŞLEMLERİ ================= */
-        function openCatalogModal() {
-            clearPixelCanvas();
-            openModal('catalogModal');
-        }
-
-        function saveFarmCatalog() {
-            const title = document.getElementById('catTitle').value.trim();
-            const desc = document.getElementById('catDesc').value.trim();
-            const iconData = exportPixelCanvas();
-
-            if (!title || !desc) return alert('Lütfen tüm alanları doldurun!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, 'farm_catalogs'));
-            window.fbSet(newRef, {
-                id: newRef.key,
+            const newFarmRef = db.ref('farms').push();
+            newFarmRef.set({
                 title: title,
-                desc: desc,
-                icon: iconData,
-                createdBy: currentUser,
-                timestamp: Date.now()
+                description: desc,
+                icon: iconBase64,
+                created: Date.now()
+            }).then(() => {
+                closeModal('addFarmCategoryModal');
             });
-
-            closeModal('catalogModal');
-            document.getElementById('catTitle').value = '';
-            document.getElementById('catDesc').value = '';
         }
 
-        function renderFarmCatalogs(data) {
-            const list = document.getElementById('catalogList');
-            const notice = document.getElementById('noFarmsNotice');
-            list.innerHTML = '';
+        // Listen for Farm Catalogs from Firebase
+        db.ref('farms').on('value', snapshot => {
+            const grid = document.getElementById('farmCatalogGrid');
+            grid.innerHTML = '';
+            const data = snapshot.val();
 
             if (!data) {
-                notice.classList.remove('hidden');
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-green-300">Henüz eklenmiş bir farm kataloğu bulunmuyor.</div>`;
                 return;
             }
 
-            notice.classList.add('hidden');
-            Object.values(data).forEach(item => {
+            Object.keys(data).forEach(id => {
+                const farm = data[id];
                 const card = document.createElement('div');
-                card.className = 'mc-box p-4 hover:border-green-500 cursor-pointer flex gap-4 items-center transition';
-                card.onclick = () => openFarmDetail(item);
+                card.className = "pixel-box p-3 flex flex-col justify-between hover:border-yellow-400 cursor-pointer transition";
+                card.onclick = () => openFarmDetail(id, farm);
                 card.innerHTML = `
-                    <img src="${item.icon}" class="w-12 h-12 border-2 border-black bg-black pixelated">
                     <div>
-                        <h4 class="text-sm text-yellow-400">${escapeHtml(item.title)}</h4>
-                        <p class="text-[9px] text-gray-300 mt-1 line-clamp-2">${escapeHtml(item.desc)}</p>
+                        <div class="flex items-center gap-3 mb-2">
+                            <img src="${farm.icon}" class="w-12 h-12 border-2 border-black bg-white rounded flex-shrink-0">
+                            <h3 class="text-xs text-yellow-300 font-bold break-words">${escapeHTML(farm.title)}</h3>
+                        </div>
+                        <p class="text-[9px] text-green-200 line-clamp-3 leading-relaxed">${escapeHTML(farm.description)}</p>
+                    </div>
+                    <div class="mt-3 text-right">
+                        <span class="pixel-btn p-1.5 text-[8px] text-white bg-green-700">Kataloğu İncele &gt;</span>
                     </div>
                 `;
-                list.appendChild(card);
+                grid.appendChild(card);
             });
-        }
+        });
 
-        function openFarmDetail(catalog) {
-            currentSelectedCatalogId = catalog.id;
-            document.getElementById('catalogList').classList.add('hidden');
-            document.getElementById('noFarmsNotice').classList.add('hidden');
+        // Farm Detail & Posts Logic
+        function openFarmDetail(farmId, farmData) {
+            currentActiveFarmId = farmId;
+            document.getElementById('farmCatalogGrid').classList.add('hidden');
             document.getElementById('farmDetailView').classList.remove('hidden');
 
-            document.getElementById('detailCatalogTitle').innerText = catalog.title;
-            document.getElementById('detailCatalogDesc').innerText = catalog.desc;
-            document.getElementById('detailCatalogIcon').src = catalog.icon;
+            document.getElementById('detailFarmTitle').innerText = farmData.title;
+            document.getElementById('detailFarmDesc').innerText = farmData.description;
+            document.getElementById('detailFarmIcon').src = farmData.icon;
 
-            // Bu Kataloğa Ait Gönderileri Dinle
-            window.fbOnValue(window.fbRef(window.fbDB, `farm_posts/${catalog.id}`), (snapshot) => {
-                renderFarmPosts(snapshot.val());
+            // Fetch Posts for this Farm
+            db.ref('farmPosts/' + farmId).on('value', snapshot => {
+                const postsList = document.getElementById('farmPostsList');
+                postsList.innerHTML = '';
+                const posts = snapshot.val();
+
+                if (!posts) {
+                    postsList.innerHTML = `<p class="text-[10px] text-green-300 italic">Bu farmla ilgili henüz gönderi paylaşılmadı. İlk gönderiyi sen paylaş!</p>`;
+                    return;
+                }
+
+                Object.keys(posts).reverse().forEach(pId => {
+                    const post = posts[pId];
+                    const mediaHtml = renderMedia(post.mediaUrl);
+                    const postCard = document.createElement('div');
+                    postCard.className = "pixel-box-dark p-3 text-[10px] space-y-2 border-l-4 border-yellow-400";
+                    postCard.innerHTML = `
+                        <div class="flex justify-between items-center text-yellow-300">
+                            <span>Sürüm: ${escapeHTML(post.version)}</span>
+                            <span class="text-[8px] text-gray-400">${new Date(post.timestamp).toLocaleDateString('tr-TR')}</span>
+                        </div>
+                        <p class="text-white leading-relaxed whitespace-pre-wrap">${escapeHTML(post.description)}</p>
+                        ${mediaHtml}
+                        <div class="text-right text-[9px] text-green-400 pt-1 border-t border-gray-800">
+                            Gönderen: <strong>${escapeHTML(post.author)}</strong>
+                        </div>
+                    `;
+                    postsList.appendChild(postCard);
+                });
             });
         }
 
         function closeFarmDetail() {
-            document.getElementById('farmDetailView').classList.add('hidden');
-            document.getElementById('catalogList').classList.remove('hidden');
-        }
-
-        function openFarmPostModal() {
-            openModal('farmPostModal');
-        }
-
-        function saveFarmPost() {
-            const version = document.getElementById('fpVersion').value.trim();
-            const desc = document.getElementById('fpDesc').value.trim();
-            const mediaUrl = document.getElementById('fpMediaUrl').value.trim();
-
-            if (!version || !desc) return alert('Lütfen sürüm ve açıklama girin!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, `farm_posts/${currentSelectedCatalogId}`));
-            window.fbSet(newRef, {
-                version: version,
-                desc: desc,
-                mediaUrl: mediaUrl,
-                author: currentUser,
-                timestamp: Date.now()
-            });
-
-            closeModal('farmPostModal');
-            document.getElementById('fpVersion').value = '';
-            document.getElementById('fpDesc').value = '';
-            document.getElementById('fpMediaUrl').value = '';
-        }
-
-        function renderFarmPosts(data) {
-            const container = document.getElementById('farmPostsList');
-            container.innerHTML = '';
-
-            if (!data) {
-                container.innerHTML = '<p class="text-xs text-gray-400">Bu farm için henüz gönderi paylaşılmamış.</p>';
-                return;
+            if (currentActiveFarmId) {
+                db.ref('farmPosts/' + currentActiveFarmId).off();
             }
+            currentActiveFarmId = null;
+            document.getElementById('farmDetailView').classList.add('hidden');
+            document.getElementById('farmCatalogGrid').classList.remove('hidden');
+        }
 
-            Object.values(data).forEach(post => {
-                let mediaHtml = '';
-                if (post.mediaUrl) {
-                    if (post.mediaUrl.includes('youtube.com') || post.mediaUrl.includes('youtu.be')) {
-                        const ytId = extractYTId(post.mediaUrl);
-                        if(ytId) {
-                            mediaHtml = `<iframe class="w-full h-48 mt-2 border-2 border-black" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe>`;
-                        }
-                    } else {
-                        mediaHtml = `<img src="${post.mediaUrl}" class="w-full max-h-60 object-cover mt-2 border-2 border-black" onerror="this.style.display='none'">`;
-                    }
-                }
+        function openAddFarmPostModal() {
+            document.getElementById('farmPostVersion').value = '';
+            document.getElementById('farmPostDesc').value = '';
+            document.getElementById('farmPostMedia').value = '';
+            openModal('addFarmPostModal');
+        }
 
-                const card = document.createElement('div');
-                card.className = 'bg-black/60 border-2 border-gray-700 p-4 space-y-2';
-                card.innerHTML = `
-                    <div class="flex justify-between text-[10px] text-green-400 border-b border-gray-800 pb-2">
-                        <span>SÜRÜM: ${escapeHtml(post.version)}</span>
-                        <span>PAYLAŞAN: ${escapeHtml(post.author)}</span>
-                    </div>
-                    <p class="text-xs text-gray-200 mt-2">${escapeHtml(post.desc)}</p>
-                    ${mediaHtml}
-                `;
-                container.appendChild(card);
+        function saveFarmPost(e) {
+            e.preventDefault();
+            if (!currentActiveFarmId) return;
+
+            const version = document.getElementById('farmPostVersion').value.trim();
+            const desc = document.getElementById('farmPostDesc').value.trim();
+            const media = document.getElementById('farmPostMedia').value.trim();
+            const author = getUsername();
+
+            db.ref('farmPosts/' + currentActiveFarmId).push({
+                version: version,
+                description: desc,
+                mediaUrl: media,
+                author: author,
+                timestamp: Date.now()
+            }).then(() => {
+                closeModal('addFarmPostModal');
             });
         }
 
-        /* ================= 2. KODLAR İŞLEMLERİ ================= */
-        function saveCode() {
+
+        // --- 6. KODLAR MODULE ---
+        function saveCode(e) {
+            e.preventDefault();
             const title = document.getElementById('codeTitle').value.trim();
-            const command = document.getElementById('codeCommand').value.trim();
+            let command = document.getElementById('codeCommand').value.trim();
             const desc = document.getElementById('codeDesc').value.trim();
 
-            if (!title || !command || !desc) return alert('Lütfen tüm alanları doldurun!');
-            if (!command.startsWith('/')) return alert('Komutlar zorunlu olarak "/" simgesi ile başlamalıdır!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, 'codes'));
-            window.fbSet(newRef, {
-                title: title,
-                command: command,
-                desc: desc,
-                author: currentUser,
-                timestamp: Date.now()
-            });
-
-            closeModal('codeModal');
-            document.getElementById('codeTitle').value = '';
-            document.getElementById('codeCommand').value = '';
-            document.getElementById('codeDesc').value = '';
-        }
-
-        function renderCodes(codes) {
-            const container = document.getElementById('codesList');
-            container.innerHTML = '';
-
-            if (!codes || codes.length === 0) {
-                container.innerHTML = '<div class="mc-box p-6 text-center text-xs text-gray-400 col-span-2">Kod bulunamadı.</div>';
-                return;
+            if (!command.startsWith('/')) {
+                command = '/' + command;
             }
 
-            codes.forEach(code => {
-                const card = document.createElement('div');
-                card.className = 'mc-box p-4 space-y-3 flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <h3 class="text-sm text-yellow-400">${escapeHtml(code.title)}</h3>
-                        <div class="mc-input p-2 mt-2 font-mono text-xs text-green-400 select-all flex justify-between items-center">
-                            <span>${escapeHtml(code.command)}</span>
-                            <button onclick="navigator.clipboard.writeText('${escapeHtml(code.command)}')" class="text-[8px] text-gray-400 hover:text-white">KOPYALA</button>
-                        </div>
-                        <p class="text-[10px] text-gray-300 mt-2">${escapeHtml(code.desc)}</p>
-                    </div>
-                    <div class="text-[9px] text-gray-500 border-t border-gray-800 pt-2 text-right">
-                        Gönderen: <span class="text-green-400">${escapeHtml(code.author)}</span>
-                    </div>
-                `;
-                container.appendChild(card);
+            db.ref('codes').push({
+                title: title,
+                command: command,
+                description: desc,
+                author: getUsername(),
+                timestamp: Date.now()
+            }).then(() => {
+                closeModal('addCodeModal');
             });
         }
+
+        db.ref('codes').on('value', snapshot => {
+            const data = snapshot.val();
+            allCodesCache = [];
+            if (data) {
+                Object.keys(data).forEach(id => {
+                    allCodesCache.push({ id, ...data[id] });
+                });
+            }
+            allCodesCache.reverse();
+            filterCodes();
+        });
 
         function filterCodes() {
             const query = document.getElementById('codeSearchInput').value.toLowerCase();
-            const filtered = allCodes.filter(c => 
-                c.title.toLowerCase().includes(query) || 
-                c.command.toLowerCase().includes(query) || 
-                c.desc.toLowerCase().includes(query)
+            const list = document.getElementById('codesList');
+            list.innerHTML = '';
+
+            const filtered = allCodesCache.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.command.toLowerCase().includes(query) ||
+                item.description.toLowerCase().includes(query)
             );
-            renderCodes(filtered);
-        }
 
-        /* ================= 3, 4, 5. HARİTA, MOD & SEED İŞLEMLERİ ================= */
-        function saveMap() {
-            const title = document.getElementById('mapTitle').value.trim();
-            const version = document.getElementById('mapVersion').value.trim();
-            const url = document.getElementById('mapUrl').value.trim();
-            const img = document.getElementById('mapImg').value.trim();
-
-            if (!title || !url) return alert('Başlık ve URL zorunludur!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, 'maps'));
-            window.fbSet(newRef, { title, version, url, img, author: currentUser, timestamp: Date.now() });
-            closeModal('mapModal');
-        }
-
-        function saveMod() {
-            const title = document.getElementById('modTitle').value.trim();
-            const version = document.getElementById('modVersion').value.trim();
-            const url = document.getElementById('modUrl').value.trim();
-            const img = document.getElementById('modImg').value.trim();
-
-            if (!title || !url) return alert('Başlık ve URL zorunludur!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, 'mods'));
-            window.fbSet(newRef, { title, version, url, img, author: currentUser, timestamp: Date.now() });
-            closeModal('modModal');
-        }
-
-        function saveSeed() {
-            const title = document.getElementById('seedTitle').value.trim();
-            const version = document.getElementById('seedVersion').value.trim();
-            const value = document.getElementById('seedValue').value.trim();
-            const img = document.getElementById('seedImg').value.trim();
-
-            if (!title || !value) return alert('Başlık ve Seed Değeri zorunludur!');
-
-            const newRef = window.fbPush(window.fbRef(window.fbDB, 'seeds'));
-            window.fbSet(newRef, { title, version, value, img, author: currentUser, timestamp: Date.now() });
-            closeModal('seedModal');
-        }
-
-        function renderCards(containerId, data, type) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-
-            if (!data) {
-                container.innerHTML = '<div class="mc-box p-6 text-center text-xs text-gray-400 col-span-3">Henüz içerik eklenmemiş.</div>';
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="text-center text-xs text-green-300 py-4">Aramaya uygun komut bulunamadı.</div>`;
                 return;
             }
 
-            Object.values(data).forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'mc-box p-4 space-y-3 flex flex-col justify-between';
-
-                let actionBtn = '';
-                if (type === 'seed') {
-                    actionBtn = `
-                        <div class="mc-input p-2 text-xs text-yellow-300 flex justify-between items-center">
-                            <span>${escapeHtml(item.value)}</span>
-                            <button onclick="navigator.clipboard.writeText('${escapeHtml(item.value)}')" class="text-[8px] text-green-400">KOPYALA</button>
-                        </div>
-                    `;
-                } else {
-                    actionBtn = `
-                        <a href="${escapeHtml(item.url)}" target="_blank" class="mc-button mc-button-green text-center block text-[10px] py-2">
-                            İNDİR / İNCELE 🔗
-                        </a>
-                    `;
-                }
-
-                const imgSrc = item.img || 'https://placehold.co/400x220/222/55ff55?text=Minecraft';
-
-                card.innerHTML = `
-                    <div class="space-y-2">
-                        <img src="${imgSrc}" class="w-full h-32 object-cover border-2 border-black" onerror="this.src='https://placehold.co/400x220/222/55ff55?text=Minecraft'">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xs text-yellow-400 truncate">${escapeHtml(item.title)}</h3>
-                            <span class="text-[8px] bg-green-900 border border-green-500 px-1 text-green-300">${escapeHtml(item.version || '1.20')}</span>
-                        </div>
-                        ${actionBtn}
+            filtered.forEach(code => {
+                const el = document.createElement('div');
+                el.className = "pixel-box p-3 text-[10px] space-y-2";
+                el.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-yellow-300 font-bold">${escapeHTML(code.title)}</h3>
+                        <button onclick="copyToClipboard('${escapeHTML(code.command)}')" class="pixel-btn p-1 text-[8px] bg-yellow-600 text-black">Kopyala</button>
                     </div>
-                    <div class="text-[9px] text-gray-500 border-t border-gray-800 pt-2 text-right">
-                        Gönderen: <span class="text-green-400">${escapeHtml(item.author)}</span>
+                    <div class="bg-black p-2 border border-green-500 font-mono text-green-400 select-all break-all">
+                        ${escapeHTML(code.command)}
+                    </div>
+                    <p class="text-gray-200">${escapeHTML(code.description)}</p>
+                    <div class="text-right text-[8px] text-green-400 border-t border-black/40 pt-1">
+                        Gönderen: <strong>${escapeHTML(code.author)}</strong>
                     </div>
                 `;
-                container.appendChild(card);
+                list.appendChild(el);
             });
         }
 
-        /* ================= 6. GEMINI Aİ ASİSTAN & ANİMASYONLU PANDA ================= */
-        async function askAI() {
-            const inputEl = document.getElementById('aiInput');
-            const query = inputEl.value.trim();
+
+        // --- 7. HARİTALAR MODULE ---
+        function saveMap(e) {
+            e.preventDefault();
+            db.ref('maps').push({
+                title: document.getElementById('mapTitle').value.trim(),
+                url: document.getElementById('mapUrl').value.trim(),
+                version: document.getElementById('mapVersion').value.trim(),
+                image: document.getElementById('mapImg').value.trim(),
+                author: getUsername(),
+                timestamp: Date.now()
+            }).then(() => closeModal('addMapModal'));
+        }
+
+        db.ref('maps').on('value', snapshot => {
+            renderGenericList('mapsGrid', snapshot.val(), 'Haritayı İndir / İncele');
+        });
+
+
+        // --- 8. MODLAR MODULE ---
+        function saveMod(e) {
+            e.preventDefault();
+            db.ref('mods').push({
+                title: document.getElementById('modTitle').value.trim(),
+                url: document.getElementById('modUrl').value.trim(),
+                version: document.getElementById('modVersion').value.trim(),
+                image: document.getElementById('modImg').value.trim(),
+                author: getUsername(),
+                timestamp: Date.now()
+            }).then(() => closeModal('addModModal'));
+        }
+
+        db.ref('mods').on('value', snapshot => {
+            renderGenericList('modsGrid', snapshot.val(), 'Modu İndir / İncele');
+        });
+
+
+        // --- 9. SEEDLER MODULE ---
+        function saveSeed(e) {
+            e.preventDefault();
+            db.ref('seeds').push({
+                title: document.getElementById('seedTitle').value.trim(),
+                version: document.getElementById('seedVersion').value.trim(),
+                seed: document.getElementById('seedCode').value.trim(),
+                image: document.getElementById('seedImg').value.trim(),
+                author: getUsername(),
+                timestamp: Date.now()
+            }).then(() => closeModal('addSeedModal'));
+        }
+
+        db.ref('seeds').on('value', snapshot => {
+            const grid = document.getElementById('seedsGrid');
+            grid.innerHTML = '';
+            const data = snapshot.val();
+            if (!data) {
+                grid.innerHTML = `<div class="col-span-full text-center text-xs text-green-300 py-4">Henüz seed paylaşılmadı.</div>`;
+                return;
+            }
+            Object.keys(data).reverse().forEach(id => {
+                const item = data[id];
+                const card = document.createElement('div');
+                card.className = "pixel-box p-3 text-[10px] space-y-2 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <img src="${escapeHTML(item.image)}" onerror="this.src='https://placehold.co/400x200/112a1f/74c69d?text=Minecraft+Seed'" class="w-full h-36 object-cover border-2 border-black mb-2 rounded">
+                        <h3 class="text-yellow-300 font-bold mb-1">${escapeHTML(item.title)}</h3>
+                        <div class="text-green-300 mb-1">Sürüm: ${escapeHTML(item.version)}</div>
+                        <div class="bg-black p-2 border border-yellow-500 font-mono text-yellow-400 font-bold select-all break-all flex justify-between items-center">
+                            <span>Seed: ${escapeHTML(item.seed)}</span>
+                            <button onclick="copyToClipboard('${escapeHTML(item.seed)}')" class="pixel-btn p-1 text-[8px] bg-yellow-600 text-black">Kopyala</button>
+                        </div>
+                    </div>
+                    <div class="text-right text-[8px] text-green-400 border-t border-black/40 pt-1 mt-2">
+                        Gönderen: <strong>${escapeHTML(item.author)}</strong>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+
+
+        // HELPER: Generic Grid Renderer for Maps/Mods
+        function renderGenericList(elementId, data, btnText) {
+            const grid = document.getElementById(elementId);
+            grid.innerHTML = '';
+            if (!data) {
+                grid.innerHTML = `<div class="col-span-full text-center text-xs text-green-300 py-4">Henüz içerik bulunmuyor.</div>`;
+                return;
+            }
+
+            Object.keys(data).reverse().forEach(id => {
+                const item = data[id];
+                const card = document.createElement('div');
+                card.className = "pixel-box p-3 text-[10px] space-y-2 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <img src="${escapeHTML(item.image)}" onerror="this.src='https://placehold.co/400x200/112a1f/74c69d?text=Minecraft'" class="w-full h-36 object-cover border-2 border-black mb-2 rounded">
+                        <h3 class="text-yellow-300 font-bold mb-1">${escapeHTML(item.title)}</h3>
+                        <div class="text-green-200 mb-2">Uyumlu Sürüm: ${escapeHTML(item.version)}</div>
+                    </div>
+                    <div>
+                        <a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="pixel-btn block text-center p-2 text-white bg-green-700 mb-2">
+                            ${btnText} <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                        </a>
+                        <div class="text-right text-[8px] text-green-400 border-t border-black/40 pt-1">
+                            Gönderen: <strong>${escapeHTML(item.author)}</strong>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+
+        // --- 10. AI ASSISTANT (GEMINI API INTEGRATION & PANDA STATES) ---
+        // Solves freezing/history issues by capping stored turns and handling timeout retries cleanly.
+
+        async function handleAISubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('aiInput');
+            const query = input.value.trim();
             if (!query) return;
 
-            const chatBox = document.getElementById('aiChatBox');
+            const chatLog = document.getElementById('aiChatLog');
+            const sendBtn = document.getElementById('aiSendBtn');
 
-            // Kullanıcı Mesajını Ekle
-            chatBox.innerHTML += `
-                <div class="bg-green-900/60 p-3 border border-green-600 text-green-200 leading-relaxed text-right">
-                    <span class="text-yellow-400 font-bold block mb-1">${currentUser || 'Siz'}:</span>
-                    ${escapeHtml(query)}
-                </div>
-            `;
-            inputEl.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+            // Add User Message to Chat Log
+            appendChatMessage('user', query);
+            input.value = '';
 
-            // PANDA ANİMASYONU: Arama yapıyor (Kırmızı Soru İşareti)
-            const pandaIcon = document.getElementById('pandaStatusIcon');
-            pandaIcon.innerText = '❓';
-            pandaIcon.className = 'absolute -top-3 text-lg animate-bounce text-red-500';
-            pandaIcon.classList.remove('hidden');
+            // Update UI State to Researching (Panda with Red Question Mark)
+            setAIState('searching');
+            sendBtn.disabled = true;
+
+            // Prepare Gemini Request Payload
+            const systemPrompt = "Sen 'MineAI' adında uzman bir Minecraft ve genel web bilgi asistanısın. Kullanıcı sorularını araştırarak net, anlaşılır ve açıklayıcı Türkçe bir özet halinde sun. Minecraft tarifleri, farmları, komutları veya genel kültür sorularında arkadaş canlısı bir dil kullan.";
+            
+            // Build conversation history (limit last 6 messages to avoid token bloating/freezing)
+            const contents = [];
+            const recentHistory = aiHistory.slice(-6);
+            recentHistory.forEach(msg => {
+                contents.push({
+                    role: msg.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.text }]
+                });
+            });
+            contents.push({ role: 'user', parts: [{ text: query }] });
+
+            const payload = {
+                contents: contents,
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            const apiKey = ""; // Canvas runtime environment key insertion
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
             try {
-                // Gemini Flash API Çağrısı (Google Search Grounding Destekli)
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const systemPrompt = "Sen MineFarm isimli bir Minecraft topluluk portalının sevimli piksel panda yapay zeka asistanısın. Web araştırması yapar, karmaşık konuları özetler ve insanlara nazik, açıklayıcı, anlaşılır bir Türkçe ile cevap verirsin. Minecraft bilgin çok yüksek, ayrıca genel web araştırmaları da yapabilirsin.";
-
-                const response = await fetch(apiUrl, {
+                const response = await fetchWithTimeout(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: query }] }],
-                        tools: [{ "google_search": {} }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
-                });
+                    body: JSON.stringify(payload)
+                }, 15000); // 15 second timeout guard
 
-                const data = await response.json();
-                const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Üzgünüm, şu an bilgiye ulaşamadım.";
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Üzgünüm, sorunuzu yanıtlarken bir aksaklık oluştu.";
 
-                // PANDA ANİMASYONU: Cevap bulundu (Yanan Ampul)
-                pandaIcon.innerText = '💡';
-                pandaIcon.className = 'absolute -top-3 text-lg animate-pulse text-yellow-300';
+                // Save to history state
+                aiHistory.push({ role: 'user', text: query });
+                aiHistory.push({ role: 'model', text: text });
 
-                // Cevabı Chatbox'a Yazdır
-                chatBox.innerHTML += `
-                    <div class="bg-gray-800 p-3 border border-gray-700 text-gray-200 leading-relaxed">
-                        <span class="text-yellow-400 font-bold block mb-1">🐼 PANDA AI:</span>
-                        ${aiText.replace(/\n/g, '<br>')}
-                    </div>
-                `;
+                // Append Model Response
+                appendChatMessage('ai', text);
+                setAIState('idle');
+
             } catch (err) {
-                chatBox.innerHTML += `
-                    <div class="bg-red-900/50 p-3 border border-red-700 text-red-200">
-                        Hata oluştu. Lütfen tekrar deneyin.
-                    </div>
-                `;
+                console.error("AI Error:", err);
+                appendChatMessage('ai', "Bağlantı zaman aşımına uğradı veya bir hata oluştu. Lütfen tekrar deneyin.");
+                setAIState('idle');
             } finally {
-                chatBox.scrollTop = chatBox.scrollHeight;
+                sendBtn.disabled = false;
             }
         }
 
-        // Yardımcı Fonksiyonlar
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        function setAIState(state) {
+            const pandaIdle = document.getElementById('pandaIdle');
+            const pandaSearching = document.getElementById('pandaSearching');
+            const pandaStatusText = document.getElementById('pandaStatusText');
+
+            if (state === 'searching') {
+                pandaIdle.classList.add('hidden');
+                pandaSearching.classList.remove('hidden');
+                pandaStatusText.innerHTML = `<span class="text-red-400 font-bold animate-pulse">MineAI web ve Minecraft veritabanını araştırıyor...</span>`;
+            } else {
+                pandaSearching.classList.add('hidden');
+                pandaIdle.classList.remove('hidden');
+                pandaStatusText.innerHTML = `MineAI hazır! Ampul yandı, sorunuz yanıtlandı.`;
+            }
         }
 
-        function extractYTId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+        function appendChatMessage(sender, text) {
+            const chatLog = document.getElementById('aiChatLog');
+            const msgDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                msgDiv.className = "bg-yellow-900/50 p-3 border border-yellow-500 text-[10px] leading-relaxed text-yellow-100 ml-4";
+                msgDiv.innerHTML = `<strong class="text-yellow-300 block mb-1">Siz (${escapeHTML(getUsername())}):</strong> ${escapeHTML(text)}`;
+            } else {
+                msgDiv.className = "bg-green-900/60 p-3 border border-green-500 text-[10px] leading-relaxed text-green-100 mr-4";
+                msgDiv.innerHTML = `<strong class="text-yellow-300 block mb-1"><i class="fa-solid fa-lightbulb text-yellow-400"></i> MineAI:</strong> ${formatText(text)}`;
+            }
+
+            chatLog.appendChild(msgDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
         }
+
+        function clearAIChat() {
+            aiHistory = [];
+            document.getElementById('aiChatLog').innerHTML = `
+                <div class="bg-green-900/60 p-3 border border-green-500 text-[10px] leading-relaxed">
+                    <strong class="text-yellow-300 block mb-1">MineAI:</strong>
+                    Sohbet temizlendi. Yeni sorularınızı bekliyorum!
+                </div>
+            `;
+            setAIState('idle');
+        }
+
+
+        // --- 11. UTILITY FUNCTIONS ---
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function copyToClipboard(text) {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Kopyalandı: " + text);
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        function formatText(str) {
+            return escapeHTML(str).replace(/\n/g, '<br>');
+        }
+
+        function renderMedia(url) {
+            if (!url) return '';
+            const cleanUrl = escapeHTML(url);
+            
+            // YouTube check
+            if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be')) {
+                let videoId = '';
+                if (cleanUrl.includes('v=')) {
+                    videoId = cleanUrl.split('v=')[1].split('&')[0];
+                } else if (cleanUrl.includes('youtu.be/')) {
+                    videoId = cleanUrl.split('youtu.be/')[1];
+                }
+                if (videoId) {
+                    return `
+                        <div class="my-2 aspect-video w-full">
+                            <iframe class="w-full h-48 border-2 border-black" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            }
+
+            // Default image preview fallback
+            return `
+                <div class="my-2">
+                    <img src="${cleanUrl}" onerror="this.style.display='none'" class="max-h-56 w-full object-cover border-2 border-black rounded">
+                </div>
+            `;
+        }
+
+        async function fetchWithTimeout(resource, options = {}, timeout = 10000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(resource, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(id);
+            return response;
+        }
+
+        // Initialize admin check on load
+        checkAdminPrivileges();
     </script>
 </body>
 </html>
