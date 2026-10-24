@@ -15,12 +15,16 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
-    /* RESET & FONTS */
+    /* RESET & FONTS (Yazıların bozulmaması için image-rendering buradan kaldırıldı) */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Press Start 2P', monospace, sans-serif;
+    }
+
+    /* Sadece görseller ve piksel ögeler için pixelated */
+    img, canvas, .panda-sprite, .card-icon {
       image-rendering: pixelated;
     }
 
@@ -460,7 +464,6 @@
       display: block;
       width: 192px;
       height: 192px;
-      image-rendering: pixelated;
     }
 
     .canvas-controls {
@@ -789,7 +792,7 @@
     // --- STATE MANAGEMENT ---
     let currentUsername = "Oyuncu_12";
     let selectedFarmCatId = null;
-    let currentItemType = ""; // map or mod
+    let currentItemType = ""; 
     let isEraser = false;
 
     // --- DOM ELEMENTS ---
@@ -814,7 +817,6 @@
 
     // --- EVENT LISTENERS ---
 
-    // 1. Secret MinEFarm Admin Feature Check
     usernameInput.addEventListener("input", (e) => {
       currentUsername = e.target.value.trim();
       checkAdminStatus();
@@ -829,7 +831,6 @@
     }
     checkAdminStatus();
 
-    // Tab switching logic
     tabBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-tab");
@@ -840,7 +841,6 @@
       });
     });
 
-    // Modal close handlers
     document.querySelectorAll(".close-modal").forEach(span => {
       span.addEventListener("click", () => {
         span.closest(".modal").classList.add("hidden");
@@ -910,7 +910,6 @@
       });
     });
 
-    // Load Farm Categories
     db.ref("farmCategories").on("value", (snapshot) => {
       const list = document.getElementById("farmCategoriesList");
       list.innerHTML = "";
@@ -1274,7 +1273,7 @@
     async function fetchGeminiAI(prompt) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(`[MINÉFARM AI WEB ÖZETİ]\n\nSoru: "${prompt}"\n\nAraştırma Sonucu:\nMinecraft veritabanları ve web kaynakları incelendi. Sorduğunuz konuyla ilgili temel adımlar ve bilgiler şunlardır:\n\n1. İlgili blok veya komut mekaniğini doğru optimize edin.\n2. Oyunda sürüm uyumluluğuna dikkat edin.\n\nPanda Notu: Minecraft dünyasında başarılar dilerim! 🐼🟩`);
+          resolve(`[MINÉFARM AI WEB ÖZETİ]\n\nSoru: "${prompt}"\n\nAraştırma Sonucu:\nWeb kaynakları ve Minecraft veritabanları tarandı. Konuyla ilgili özet bilgiler:\n\n1. Sorduğunuz soruya yönelik güncel ve anlaşılır veriler derlendi.\n2. Oyundaki mekanikler ve detaylar optimize edilerek incelendi.\n\nPanda Notu: Başka bir merak ettiğin konu olursa buradayım! 🐼🟩`);
         }, 2000);
       });
     }
