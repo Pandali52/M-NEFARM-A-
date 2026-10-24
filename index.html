@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MinEFarm - Minecraft Topluluk & Yardımcı Hub</title>
+  <title>MinEFarm - Topluluk & Yardımcı Hub</title>
   
   <!-- Pixel Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
-    /* RESET & FONTS (Yazıların bozulmaması için image-rendering buradan kaldırıldı) */
+    /* RESET & FONTS */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -86,7 +86,7 @@
       outline: none;
     }
 
-    /* NAVIGATION TABS */
+    /* NAVIGATION TABS (Emojiler kaldırıldı) */
     .nav-tabs {
       display: flex;
       gap: 8px;
@@ -555,8 +555,8 @@
   <!-- HEADER / USERNAME -->
   <header class="main-header">
     <div class="logo-area">
-      <h1>MINÉFARM</h1>
-      <span class="subtitle">Minecraft Topluluk Portalı</span>
+      <h1>MİNEFARM</h1>
+      <span class="subtitle">Topluluk & Yardımcı Hub</span>
     </div>
 
     <div class="user-bar">
@@ -565,14 +565,14 @@
     </div>
   </header>
 
-  <!-- NAVIGATION TABS -->
+  <!-- NAVIGATION TABS (Emojisiz) -->
   <nav class="nav-tabs">
-    <button class="tab-btn active" data-tab="farmlar">🌾 FARMLAR</button>
-    <button class="tab-btn" data-tab="kodlar">💻 KODLAR</button>
-    <button class="tab-btn" data-tab="haritalar">🗺️ HARİTALAR</button>
-    <button class="tab-btn" data-tab="modlar">🧩 MODLAR</button>
-    <button class="tab-btn" data-tab="seedler">🌱 SEEDLER</button>
-    <button class="tab-btn ai-tab-btn" data-tab="ai">🐼 Aİ</button>
+    <button class="tab-btn active" data-tab="farmlar">FARMLAR</button>
+    <button class="tab-btn" data-tab="kodlar">KODLAR</button>
+    <button class="tab-btn" data-tab="haritalar">HARİTALAR</button>
+    <button class="tab-btn" data-tab="modlar">MODLAR</button>
+    <button class="tab-btn" data-tab="seedler">SEEDLER</button>
+    <button class="tab-btn ai-tab-btn" data-tab="ai">Aİ</button>
   </nav>
 
   <!-- MAIN CONTAINER -->
@@ -654,8 +654,8 @@
     <section id="tab-ai" class="tab-content">
       <div class="ai-container">
         <div class="ai-header">
-          <h2>MINÉFARM PANDA AI</h2>
-          <p class="ai-subtext">Web sitelerini araştırır, özetler ve Minecraft hakkında her şeyi açıklar!</p>
+          <h2>MİNEFARM PANDA Aİ</h2>
+          <p class="ai-subtext">İnterneti ve web sitelerini araştırır; ister ünlülerin hayatını ister herhangi bir konuyu herkese anlaşılır bir dille özetler!</p>
         </div>
 
         <!-- PANDA ANIMATION BOX -->
@@ -677,7 +677,7 @@
 
         <!-- AI SEARCH INPUT -->
         <div class="ai-input-group">
-          <textarea id="aiPromptInput" placeholder="Minecraft veya web araştırması hakkında ne öğrenmek istersin? (örn: Redstone mantık kapıları nedir? or Minecraft 1.21 yenilikleri özetle)"></textarea>
+          <textarea id="aiPromptInput" placeholder="Ne öğrenmek istersin? (örn: Albert Einstein kimdir?, Mustafa Kemal Atatürk'ün hayatı, veya Minecraft redstone mantığı...)"></textarea>
           <button id="aiSubmitBtn" class="mc-btn action">SORU SOR / ARAŞTIR</button>
         </div>
 
@@ -1236,7 +1236,7 @@
       });
     });
 
-    // --- PANDA AI INTEGRATION ---
+    // --- PANDA AI INTEGRATION (Genel Konu & Kolay Anlaşılır Özetçi) ---
     const aiPromptInput = document.getElementById("aiPromptInput");
     const aiSubmitBtn = document.getElementById("aiSubmitBtn");
     const pandaStatusIcon = document.getElementById("pandaStatusIcon");
@@ -1246,12 +1246,12 @@
 
     aiSubmitBtn.addEventListener("click", async () => {
       const prompt = aiPromptInput.value.trim();
-      if (!prompt) return alert("Lütfen AI'ya bir soru sorun!");
+      if (!prompt) return alert("Lütfen Aİ'ye bir soru sorun!");
 
       // Searching State (Kırmızı Soru İşareti)
       pandaStatusIcon.textContent = "?";
       pandaStatusIcon.className = "status-icon mark";
-      pandaStatusText.textContent = "Panda ağda araştırma yapıyor ve verileri tarıyor...";
+      pandaStatusText.textContent = "Panda ağda araştırma yapıyor ve kaynakları tarıyor...";
       aiResponseContainer.classList.add("hidden");
 
       try {
@@ -1273,7 +1273,7 @@
     async function fetchGeminiAI(prompt) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(`[MINÉFARM AI WEB ÖZETİ]\n\nSoru: "${prompt}"\n\nAraştırma Sonucu:\nWeb kaynakları ve Minecraft veritabanları tarandı. Konuyla ilgili özet bilgiler:\n\n1. Sorduğunuz soruya yönelik güncel ve anlaşılır veriler derlendi.\n2. Oyundaki mekanikler ve detaylar optimize edilerek incelendi.\n\nPanda Notu: Başka bir merak ettiğin konu olursa buradayım! 🐼🟩`);
+          resolve(`[MİNEFARM Aİ GENEL ARAŞTIRMA ÖZETİ]\n\nSoru / Konu: "${prompt}"\n\nAraştırma Sonucu:\nİnternet kaynakları ve ansiklopedik veriler tarandı. Sorduğunuz konuyla ilgili bilmeniz gereken en önemli noktalar şunlardır:\n\n1. Konunun ana hatları, geçmişi ve detayları herkesin rahatça anlayabileceği akıcı bir dille derlendi.\n2. Karmaşık terimler yerine günlük anlatım tercih edildi.\n\nPanda Notu: Başka merak ettiğin herhangi bir kişi, olay veya konu varsa her zaman sorabilirsin!`);
         }, 2000);
       });
     }
