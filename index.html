@@ -24,7 +24,7 @@
     }
 
     /* Sadece görseller ve piksel ögeler için pixelated */
-    img, canvas, .panda-sprite, .card-icon {
+    img, canvas, .card-icon {
       image-rendering: pixelated;
     }
 
@@ -86,7 +86,7 @@
       outline: none;
     }
 
-    /* NAVIGATION TABS (Emojiler kaldırıldı) */
+    /* NAVIGATION TABS (Emojisiz) */
     .nav-tabs {
       display: flex;
       gap: 8px;
@@ -116,10 +116,6 @@
       border-bottom-color: #1c4d0e;
       border-right-color: #1c4d0e;
       color: #ffff55;
-    }
-
-    .tab-btn.ai-tab-btn {
-      background: #5555ff;
     }
 
     /* MAIN CONTAINER */
@@ -301,160 +297,6 @@
       align-items: center;
     }
 
-    /* PANDA AI STYLES */
-    .ai-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .ai-header {
-      text-align: center;
-    }
-
-    .ai-subtext {
-      font-size: 8px;
-      color: #aaa;
-      margin-top: 8px;
-    }
-
-    .panda-display {
-      background: #111;
-      border: 4px solid #555;
-      width: 100%;
-      max-width: 450px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      position: relative;
-    }
-
-    /* Pixel Panda Drawing */
-    .panda-sprite {
-      width: 80px;
-      height: 70px;
-      position: relative;
-    }
-
-    .panda-head {
-      width: 60px;
-      height: 50px;
-      background: #fff;
-      margin: 10px auto 0;
-      position: relative;
-      border: 3px solid #000;
-    }
-
-    .panda-ear {
-      width: 16px;
-      height: 16px;
-      background: #000;
-      position: absolute;
-      top: -8px;
-    }
-    .panda-ear.left { left: -4px; }
-    .panda-ear.right { right: -4px; }
-
-    .panda-eye {
-      width: 12px;
-      height: 14px;
-      background: #000;
-      position: absolute;
-      top: 12px;
-    }
-    .panda-eye.left { left: 8px; }
-    .panda-eye.right { right: 8px; }
-
-    .panda-snout {
-      width: 10px;
-      height: 6px;
-      background: #000;
-      position: absolute;
-      bottom: 8px;
-      left: 22px;
-    }
-
-    /* Status Icon on Head */
-    .status-icon {
-      position: absolute;
-      top: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .status-icon.mark {
-      color: #ff3333;
-      animation: bounce 0.6s infinite alternate;
-    }
-
-    .status-icon.bulb {
-      color: #ffff33;
-      text-shadow: 0 0 10px #ffff00;
-      animation: glow 0.8s infinite alternate;
-    }
-
-    @keyframes bounce {
-      from { transform: translate(-50%, 0); }
-      to { transform: translate(-50%, -8px); }
-    }
-
-    @keyframes glow {
-      from { opacity: 0.7; }
-      to { opacity: 1; text-shadow: 0 0 15px #ffff55; }
-    }
-
-    .panda-status-text {
-      font-size: 9px;
-      color: #ffff55;
-      text-align: center;
-    }
-
-    .ai-input-group {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .ai-input-group textarea {
-      width: 100%;
-      height: 90px;
-      background: #000;
-      border: 3px solid #555;
-      color: #fff;
-      padding: 10px;
-      font-size: 9px;
-      outline: none;
-      resize: vertical;
-    }
-
-    .ai-response-box {
-      background: #1a261a;
-      border: 3px solid #55ff55;
-      padding: 15px;
-      width: 100%;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .ai-response-box h3 {
-      font-size: 11px;
-      color: #ffff55;
-      margin-bottom: 10px;
-    }
-
-    .ai-body-content {
-      font-size: 9px;
-      color: #e0e0e0;
-      white-space: pre-wrap;
-    }
-
     /* CANVAS EDITOR MODAL */
     #pixelCanvas {
       border: 3px solid #fff;
@@ -464,6 +306,7 @@
       display: block;
       width: 192px;
       height: 192px;
+      image-rendering: pixelated;
     }
 
     .canvas-controls {
@@ -572,7 +415,6 @@
     <button class="tab-btn" data-tab="haritalar">HARİTALAR</button>
     <button class="tab-btn" data-tab="modlar">MODLAR</button>
     <button class="tab-btn" data-tab="seedler">SEEDLER</button>
-    <button class="tab-btn ai-tab-btn" data-tab="ai">Aİ</button>
   </nav>
 
   <!-- MAIN CONTAINER -->
@@ -647,45 +489,6 @@
       </div>
       <div id="seedsList" class="cards-grid">
         <p class="empty-msg">Yükleniyor...</p>
-      </div>
-    </section>
-
-    <!-- 6. Aİ TAB -->
-    <section id="tab-ai" class="tab-content">
-      <div class="ai-container">
-        <div class="ai-header">
-          <h2>MİNEFARM PANDA Aİ</h2>
-          <p class="ai-subtext">İnterneti ve web sitelerini araştırır; ister ünlülerin hayatını ister herhangi bir konuyu herkese anlaşılır bir dille özetler!</p>
-        </div>
-
-        <!-- PANDA ANIMATION BOX -->
-        <div class="panda-display">
-          <div id="pandaSprite" class="panda-sprite state-idle">
-            <div class="panda-head">
-              <div class="panda-ear left"></div>
-              <div class="panda-ear right"></div>
-              <div class="panda-face">
-                <div class="panda-eye left"></div>
-                <div class="panda-eye right"></div>
-                <div class="panda-snout"></div>
-              </div>
-            </div>
-            <div id="pandaStatusIcon" class="status-icon mark">?</div>
-          </div>
-          <div id="pandaStatusText" class="panda-status-text">Panda hazır ve sorunuzu bekliyor...</div>
-        </div>
-
-        <!-- AI SEARCH INPUT -->
-        <div class="ai-input-group">
-          <textarea id="aiPromptInput" placeholder="Ne öğrenmek istersin? (örn: Albert Einstein kimdir?, Mustafa Kemal Atatürk'ün hayatı, veya Minecraft redstone mantığı...)"></textarea>
-          <button id="aiSubmitBtn" class="mc-btn action">SORU SOR / ARAŞTIR</button>
-        </div>
-
-        <!-- AI RESPONSE AREA -->
-        <div id="aiResponseContainer" class="ai-response-box hidden">
-          <h3>PANDA ÖZETİ:</h3>
-          <div id="aiResponseBody" class="ai-body-content"></div>
-        </div>
       </div>
     </section>
 
@@ -1235,48 +1038,6 @@
         list.appendChild(card);
       });
     });
-
-    // --- PANDA AI INTEGRATION (Genel Konu & Kolay Anlaşılır Özetçi) ---
-    const aiPromptInput = document.getElementById("aiPromptInput");
-    const aiSubmitBtn = document.getElementById("aiSubmitBtn");
-    const pandaStatusIcon = document.getElementById("pandaStatusIcon");
-    const pandaStatusText = document.getElementById("pandaStatusText");
-    const aiResponseContainer = document.getElementById("aiResponseContainer");
-    const aiResponseBody = document.getElementById("aiResponseBody");
-
-    aiSubmitBtn.addEventListener("click", async () => {
-      const prompt = aiPromptInput.value.trim();
-      if (!prompt) return alert("Lütfen Aİ'ye bir soru sorun!");
-
-      // Searching State (Kırmızı Soru İşareti)
-      pandaStatusIcon.textContent = "?";
-      pandaStatusIcon.className = "status-icon mark";
-      pandaStatusText.textContent = "Panda ağda araştırma yapıyor ve kaynakları tarıyor...";
-      aiResponseContainer.classList.add("hidden");
-
-      try {
-        const responseText = await fetchGeminiAI(prompt);
-
-        // Found State (Kafada Yanan Ampul)
-        pandaStatusIcon.textContent = "💡";
-        pandaStatusIcon.className = "status-icon bulb";
-        pandaStatusText.textContent = "Panda cevabı buldu ve özetledi!";
-
-        aiResponseBody.innerText = responseText;
-        aiResponseContainer.classList.remove("hidden");
-      } catch (err) {
-        pandaStatusText.textContent = "Bir hata oluştu! Lütfen tekrar deneyin.";
-        console.error(err);
-      }
-    });
-
-    async function fetchGeminiAI(prompt) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(`[MİNEFARM Aİ GENEL ARAŞTIRMA ÖZETİ]\n\nSoru / Konu: "${prompt}"\n\nAraştırma Sonucu:\nİnternet kaynakları ve ansiklopedik veriler tarandı. Sorduğunuz konuyla ilgili bilmeniz gereken en önemli noktalar şunlardır:\n\n1. Konunun ana hatları, geçmişi ve detayları herkesin rahatça anlayabileceği akıcı bir dille derlendi.\n2. Karmaşık terimler yerine günlük anlatım tercih edildi.\n\nPanda Notu: Başka merak ettiğin herhangi bir kişi, olay veya konu varsa her zaman sorabilirsin!`);
-        }, 2000);
-      });
-    }
 
     // --- HELPER FUNCTIONS ---
     function readFileAsBase64(file) {
